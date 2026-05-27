@@ -4,23 +4,56 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:clean": "node -e \"require('fs').rmSync('.next',{recursive:true,force:true})\" && next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "seed": "tsx scripts/seed.ts",
+    "seed:reset": "tsx scripts/seed-reset.ts",
+    "debug:rag": "tsx scripts/debug-rag.ts",
+    "benchmark": "tsx scripts/benchmark.ts",
+    "postinstall": "prisma generate",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio"
   },
   "dependencies": {
+    "@clerk/nextjs": "^7.3.4",
+    "@langchain/core": "^1.1.46",
+    "@langchain/openai": "^1.2.12",
+    "@langchain/pinecone": "^1.0.2",
+    "@langchain/textsplitters": "^1.0.1",
+    "@pinecone-database/pinecone": "^7.2.0",
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "@prisma/client-runtime-utils": "^7.8.0",
+    "africastalking": "^0.8.0",
+    "langchain": "^1.4.0",
+    "nanoid": "^5.1.11",
     "next": "16.2.6",
+    "pdf-parse": "^2.4.5",
+    "pg": "^8.21.0",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/pdf-parse": "^1.1.5",
+    "@types/pg": "^8.20.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv": "^17.4.2",
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
+    "prisma": "^7.8.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "tsx": "^4.21.1",
+    "typescript": "^5",
+    "vitest": "^4.1.6"
   }
 }

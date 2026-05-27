@@ -1,0 +1,105 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Channel {
+  web
+  ussd
+}
+
+enum MessageRole {
+  user
+  assistant
+}
+
+enum EscalationStatus {
+  open
+  in_progress
+  resolved
+}
+
+enum DocumentStatus {
+  pending
+  indexed
+  failed
+}
+
+model Conversation {
+  id             String       @id @default(uuid()) @db.Uuid
+  userId         String?      @map("user_id")
+  guestSessionId String?      @map("guest_session_id")
+  channel        Channel      @default(web)
+  phoneNumber    String?      @map("phone_number")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @default(now()) @updatedAt @map("updated_at")
+  messages       Message[]
+  escalations    Escalation[]
+
+  @@map("conversations")
+}
+
+model Message {
+  id             String       @id @default(uuid()) @db.Uuid
+  conversationId String       @map("conversation_id") @db.Uuid
+  role           MessageRole
+  content        String
+  sources        Json?
+  confidence     Int?
+  latencyMs      Int?         @map("latency_ms")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@map("messages")
+}
+
+model Escalation {
+  id             String           @id @default(uuid()) @db.Uuid
+  conversationId String?          @map("conversation_id") @db.Uuid
+  contact        String
+  summary        String
+  status         EscalationStatus @default(open)
+  channel        Channel          @default(web)
+  createdAt      DateTime         @default(now()) @map("created_at")
+  conversation   Conversation?    @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+
+  @@map("escalations")
+}
+
+model UssdSession {
+  sessionId   String   @id @map("session_id")
+  step        String
+  payload     Json?
+  phoneNumber String?  @map("phone_number")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("ussd_sessions")
+}
+
+model Document {
+  id         String         @id @default(uuid()) @db.Uuid
+  filename   String
+  category   String
+  chunkCount Int            @default(0) @map("chunk_count")
+  status     DocumentStatus @default(pending)
+  indexedAt  DateTime?      @map("indexed_at")
+  createdAt  DateTime       @default(now()) @map("created_at")
+
+  @@map("documents")
+}
+
+model QueryLog {
+  id        String   @id @default(uuid()) @db.Uuid
+  channel   Channel  @default(web)
+  queryHash String   @map("query_hash")
+  latencyMs Int?     @map("latency_ms")
+  topScore  Int?     @map("top_score")
+  escalated Int      @default(0)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("query_logs")
+}

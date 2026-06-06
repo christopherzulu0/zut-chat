@@ -29,11 +29,6 @@ export type Message = $Result.DefaultSelection<Prisma.$MessagePayload>
  */
 export type Escalation = $Result.DefaultSelection<Prisma.$EscalationPayload>
 /**
- * Model UssdSession
- * 
- */
-export type UssdSession = $Result.DefaultSelection<Prisma.$UssdSessionPayload>
-/**
  * Model Document
  * 
  */
@@ -49,8 +44,7 @@ export type QueryLog = $Result.DefaultSelection<Prisma.$QueryLogPayload>
  */
 export namespace $Enums {
   export const Channel: {
-  web: 'web',
-  ussd: 'ussd'
+  web: 'web'
 };
 
 export type Channel = (typeof Channel)[keyof typeof Channel]
@@ -249,16 +243,6 @@ export class PrismaClient<
     * ```
     */
   get escalation(): Prisma.EscalationDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.ussdSession`: Exposes CRUD operations for the **UssdSession** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more UssdSessions
-    * const ussdSessions = await prisma.ussdSession.findMany()
-    * ```
-    */
-  get ussdSession(): Prisma.UssdSessionDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.document`: Exposes CRUD operations for the **Document** model.
@@ -716,7 +700,6 @@ export namespace Prisma {
     Conversation: 'Conversation',
     Message: 'Message',
     Escalation: 'Escalation',
-    UssdSession: 'UssdSession',
     Document: 'Document',
     QueryLog: 'QueryLog'
   };
@@ -734,7 +717,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "conversation" | "message" | "escalation" | "ussdSession" | "document" | "queryLog"
+      modelProps: "conversation" | "message" | "escalation" | "document" | "queryLog"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -957,80 +940,6 @@ export namespace Prisma {
           count: {
             args: Prisma.EscalationCountArgs<ExtArgs>
             result: $Utils.Optional<EscalationCountAggregateOutputType> | number
-          }
-        }
-      }
-      UssdSession: {
-        payload: Prisma.$UssdSessionPayload<ExtArgs>
-        fields: Prisma.UssdSessionFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.UssdSessionFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UssdSessionPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.UssdSessionFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UssdSessionPayload>
-          }
-          findFirst: {
-            args: Prisma.UssdSessionFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UssdSessionPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.UssdSessionFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UssdSessionPayload>
-          }
-          findMany: {
-            args: Prisma.UssdSessionFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UssdSessionPayload>[]
-          }
-          create: {
-            args: Prisma.UssdSessionCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UssdSessionPayload>
-          }
-          createMany: {
-            args: Prisma.UssdSessionCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.UssdSessionCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UssdSessionPayload>[]
-          }
-          delete: {
-            args: Prisma.UssdSessionDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UssdSessionPayload>
-          }
-          update: {
-            args: Prisma.UssdSessionUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UssdSessionPayload>
-          }
-          deleteMany: {
-            args: Prisma.UssdSessionDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.UssdSessionUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.UssdSessionUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UssdSessionPayload>[]
-          }
-          upsert: {
-            args: Prisma.UssdSessionUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UssdSessionPayload>
-          }
-          aggregate: {
-            args: Prisma.UssdSessionAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateUssdSession>
-          }
-          groupBy: {
-            args: Prisma.UssdSessionGroupByArgs<ExtArgs>
-            result: $Utils.Optional<UssdSessionGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.UssdSessionCountArgs<ExtArgs>
-            result: $Utils.Optional<UssdSessionCountAggregateOutputType> | number
           }
         }
       }
@@ -1293,7 +1202,6 @@ export namespace Prisma {
     conversation?: ConversationOmit
     message?: MessageOmit
     escalation?: EscalationOmit
-    ussdSession?: UssdSessionOmit
     document?: DocumentOmit
     queryLog?: QueryLogOmit
   }
@@ -3694,6 +3602,8 @@ export namespace Prisma {
     id: string | null
     conversationId: string | null
     contact: string | null
+    userName: string | null
+    userEmail: string | null
     summary: string | null
     status: $Enums.EscalationStatus | null
     channel: $Enums.Channel | null
@@ -3704,6 +3614,8 @@ export namespace Prisma {
     id: string | null
     conversationId: string | null
     contact: string | null
+    userName: string | null
+    userEmail: string | null
     summary: string | null
     status: $Enums.EscalationStatus | null
     channel: $Enums.Channel | null
@@ -3714,6 +3626,8 @@ export namespace Prisma {
     id: number
     conversationId: number
     contact: number
+    userName: number
+    userEmail: number
     summary: number
     status: number
     channel: number
@@ -3726,6 +3640,8 @@ export namespace Prisma {
     id?: true
     conversationId?: true
     contact?: true
+    userName?: true
+    userEmail?: true
     summary?: true
     status?: true
     channel?: true
@@ -3736,6 +3652,8 @@ export namespace Prisma {
     id?: true
     conversationId?: true
     contact?: true
+    userName?: true
+    userEmail?: true
     summary?: true
     status?: true
     channel?: true
@@ -3746,6 +3664,8 @@ export namespace Prisma {
     id?: true
     conversationId?: true
     contact?: true
+    userName?: true
+    userEmail?: true
     summary?: true
     status?: true
     channel?: true
@@ -3829,6 +3749,8 @@ export namespace Prisma {
     id: string
     conversationId: string | null
     contact: string
+    userName: string | null
+    userEmail: string | null
     summary: string
     status: $Enums.EscalationStatus
     channel: $Enums.Channel
@@ -3856,6 +3778,8 @@ export namespace Prisma {
     id?: boolean
     conversationId?: boolean
     contact?: boolean
+    userName?: boolean
+    userEmail?: boolean
     summary?: boolean
     status?: boolean
     channel?: boolean
@@ -3867,6 +3791,8 @@ export namespace Prisma {
     id?: boolean
     conversationId?: boolean
     contact?: boolean
+    userName?: boolean
+    userEmail?: boolean
     summary?: boolean
     status?: boolean
     channel?: boolean
@@ -3878,6 +3804,8 @@ export namespace Prisma {
     id?: boolean
     conversationId?: boolean
     contact?: boolean
+    userName?: boolean
+    userEmail?: boolean
     summary?: boolean
     status?: boolean
     channel?: boolean
@@ -3889,13 +3817,15 @@ export namespace Prisma {
     id?: boolean
     conversationId?: boolean
     contact?: boolean
+    userName?: boolean
+    userEmail?: boolean
     summary?: boolean
     status?: boolean
     channel?: boolean
     createdAt?: boolean
   }
 
-  export type EscalationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "conversationId" | "contact" | "summary" | "status" | "channel" | "createdAt", ExtArgs["result"]["escalation"]>
+  export type EscalationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "conversationId" | "contact" | "userName" | "userEmail" | "summary" | "status" | "channel" | "createdAt", ExtArgs["result"]["escalation"]>
   export type EscalationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     conversation?: boolean | Escalation$conversationArgs<ExtArgs>
   }
@@ -3915,6 +3845,8 @@ export namespace Prisma {
       id: string
       conversationId: string | null
       contact: string
+      userName: string | null
+      userEmail: string | null
       summary: string
       status: $Enums.EscalationStatus
       channel: $Enums.Channel
@@ -4346,6 +4278,8 @@ export namespace Prisma {
     readonly id: FieldRef<"Escalation", 'String'>
     readonly conversationId: FieldRef<"Escalation", 'String'>
     readonly contact: FieldRef<"Escalation", 'String'>
+    readonly userName: FieldRef<"Escalation", 'String'>
+    readonly userEmail: FieldRef<"Escalation", 'String'>
     readonly summary: FieldRef<"Escalation", 'String'>
     readonly status: FieldRef<"Escalation", 'EscalationStatus'>
     readonly channel: FieldRef<"Escalation", 'Channel'>
@@ -4785,1002 +4719,6 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: EscalationInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model UssdSession
-   */
-
-  export type AggregateUssdSession = {
-    _count: UssdSessionCountAggregateOutputType | null
-    _min: UssdSessionMinAggregateOutputType | null
-    _max: UssdSessionMaxAggregateOutputType | null
-  }
-
-  export type UssdSessionMinAggregateOutputType = {
-    sessionId: string | null
-    step: string | null
-    phoneNumber: string | null
-    updatedAt: Date | null
-  }
-
-  export type UssdSessionMaxAggregateOutputType = {
-    sessionId: string | null
-    step: string | null
-    phoneNumber: string | null
-    updatedAt: Date | null
-  }
-
-  export type UssdSessionCountAggregateOutputType = {
-    sessionId: number
-    step: number
-    payload: number
-    phoneNumber: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type UssdSessionMinAggregateInputType = {
-    sessionId?: true
-    step?: true
-    phoneNumber?: true
-    updatedAt?: true
-  }
-
-  export type UssdSessionMaxAggregateInputType = {
-    sessionId?: true
-    step?: true
-    phoneNumber?: true
-    updatedAt?: true
-  }
-
-  export type UssdSessionCountAggregateInputType = {
-    sessionId?: true
-    step?: true
-    payload?: true
-    phoneNumber?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type UssdSessionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which UssdSession to aggregate.
-     */
-    where?: UssdSessionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of UssdSessions to fetch.
-     */
-    orderBy?: UssdSessionOrderByWithRelationInput | UssdSessionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: UssdSessionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` UssdSessions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` UssdSessions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned UssdSessions
-    **/
-    _count?: true | UssdSessionCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: UssdSessionMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: UssdSessionMaxAggregateInputType
-  }
-
-  export type GetUssdSessionAggregateType<T extends UssdSessionAggregateArgs> = {
-        [P in keyof T & keyof AggregateUssdSession]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateUssdSession[P]>
-      : GetScalarType<T[P], AggregateUssdSession[P]>
-  }
-
-
-
-
-  export type UssdSessionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: UssdSessionWhereInput
-    orderBy?: UssdSessionOrderByWithAggregationInput | UssdSessionOrderByWithAggregationInput[]
-    by: UssdSessionScalarFieldEnum[] | UssdSessionScalarFieldEnum
-    having?: UssdSessionScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: UssdSessionCountAggregateInputType | true
-    _min?: UssdSessionMinAggregateInputType
-    _max?: UssdSessionMaxAggregateInputType
-  }
-
-  export type UssdSessionGroupByOutputType = {
-    sessionId: string
-    step: string
-    payload: JsonValue | null
-    phoneNumber: string | null
-    updatedAt: Date
-    _count: UssdSessionCountAggregateOutputType | null
-    _min: UssdSessionMinAggregateOutputType | null
-    _max: UssdSessionMaxAggregateOutputType | null
-  }
-
-  type GetUssdSessionGroupByPayload<T extends UssdSessionGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<UssdSessionGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof UssdSessionGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], UssdSessionGroupByOutputType[P]>
-            : GetScalarType<T[P], UssdSessionGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type UssdSessionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    sessionId?: boolean
-    step?: boolean
-    payload?: boolean
-    phoneNumber?: boolean
-    updatedAt?: boolean
-  }, ExtArgs["result"]["ussdSession"]>
-
-  export type UssdSessionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    sessionId?: boolean
-    step?: boolean
-    payload?: boolean
-    phoneNumber?: boolean
-    updatedAt?: boolean
-  }, ExtArgs["result"]["ussdSession"]>
-
-  export type UssdSessionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    sessionId?: boolean
-    step?: boolean
-    payload?: boolean
-    phoneNumber?: boolean
-    updatedAt?: boolean
-  }, ExtArgs["result"]["ussdSession"]>
-
-  export type UssdSessionSelectScalar = {
-    sessionId?: boolean
-    step?: boolean
-    payload?: boolean
-    phoneNumber?: boolean
-    updatedAt?: boolean
-  }
-
-  export type UssdSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"sessionId" | "step" | "payload" | "phoneNumber" | "updatedAt", ExtArgs["result"]["ussdSession"]>
-
-  export type $UssdSessionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "UssdSession"
-    objects: {}
-    scalars: $Extensions.GetPayloadResult<{
-      sessionId: string
-      step: string
-      payload: Prisma.JsonValue | null
-      phoneNumber: string | null
-      updatedAt: Date
-    }, ExtArgs["result"]["ussdSession"]>
-    composites: {}
-  }
-
-  type UssdSessionGetPayload<S extends boolean | null | undefined | UssdSessionDefaultArgs> = $Result.GetResult<Prisma.$UssdSessionPayload, S>
-
-  type UssdSessionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<UssdSessionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: UssdSessionCountAggregateInputType | true
-    }
-
-  export interface UssdSessionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UssdSession'], meta: { name: 'UssdSession' } }
-    /**
-     * Find zero or one UssdSession that matches the filter.
-     * @param {UssdSessionFindUniqueArgs} args - Arguments to find a UssdSession
-     * @example
-     * // Get one UssdSession
-     * const ussdSession = await prisma.ussdSession.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends UssdSessionFindUniqueArgs>(args: SelectSubset<T, UssdSessionFindUniqueArgs<ExtArgs>>): Prisma__UssdSessionClient<$Result.GetResult<Prisma.$UssdSessionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one UssdSession that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {UssdSessionFindUniqueOrThrowArgs} args - Arguments to find a UssdSession
-     * @example
-     * // Get one UssdSession
-     * const ussdSession = await prisma.ussdSession.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends UssdSessionFindUniqueOrThrowArgs>(args: SelectSubset<T, UssdSessionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UssdSessionClient<$Result.GetResult<Prisma.$UssdSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first UssdSession that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UssdSessionFindFirstArgs} args - Arguments to find a UssdSession
-     * @example
-     * // Get one UssdSession
-     * const ussdSession = await prisma.ussdSession.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends UssdSessionFindFirstArgs>(args?: SelectSubset<T, UssdSessionFindFirstArgs<ExtArgs>>): Prisma__UssdSessionClient<$Result.GetResult<Prisma.$UssdSessionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first UssdSession that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UssdSessionFindFirstOrThrowArgs} args - Arguments to find a UssdSession
-     * @example
-     * // Get one UssdSession
-     * const ussdSession = await prisma.ussdSession.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends UssdSessionFindFirstOrThrowArgs>(args?: SelectSubset<T, UssdSessionFindFirstOrThrowArgs<ExtArgs>>): Prisma__UssdSessionClient<$Result.GetResult<Prisma.$UssdSessionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more UssdSessions that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UssdSessionFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all UssdSessions
-     * const ussdSessions = await prisma.ussdSession.findMany()
-     * 
-     * // Get first 10 UssdSessions
-     * const ussdSessions = await prisma.ussdSession.findMany({ take: 10 })
-     * 
-     * // Only select the `sessionId`
-     * const ussdSessionWithSessionIdOnly = await prisma.ussdSession.findMany({ select: { sessionId: true } })
-     * 
-     */
-    findMany<T extends UssdSessionFindManyArgs>(args?: SelectSubset<T, UssdSessionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UssdSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a UssdSession.
-     * @param {UssdSessionCreateArgs} args - Arguments to create a UssdSession.
-     * @example
-     * // Create one UssdSession
-     * const UssdSession = await prisma.ussdSession.create({
-     *   data: {
-     *     // ... data to create a UssdSession
-     *   }
-     * })
-     * 
-     */
-    create<T extends UssdSessionCreateArgs>(args: SelectSubset<T, UssdSessionCreateArgs<ExtArgs>>): Prisma__UssdSessionClient<$Result.GetResult<Prisma.$UssdSessionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many UssdSessions.
-     * @param {UssdSessionCreateManyArgs} args - Arguments to create many UssdSessions.
-     * @example
-     * // Create many UssdSessions
-     * const ussdSession = await prisma.ussdSession.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends UssdSessionCreateManyArgs>(args?: SelectSubset<T, UssdSessionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many UssdSessions and returns the data saved in the database.
-     * @param {UssdSessionCreateManyAndReturnArgs} args - Arguments to create many UssdSessions.
-     * @example
-     * // Create many UssdSessions
-     * const ussdSession = await prisma.ussdSession.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many UssdSessions and only return the `sessionId`
-     * const ussdSessionWithSessionIdOnly = await prisma.ussdSession.createManyAndReturn({
-     *   select: { sessionId: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends UssdSessionCreateManyAndReturnArgs>(args?: SelectSubset<T, UssdSessionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UssdSessionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a UssdSession.
-     * @param {UssdSessionDeleteArgs} args - Arguments to delete one UssdSession.
-     * @example
-     * // Delete one UssdSession
-     * const UssdSession = await prisma.ussdSession.delete({
-     *   where: {
-     *     // ... filter to delete one UssdSession
-     *   }
-     * })
-     * 
-     */
-    delete<T extends UssdSessionDeleteArgs>(args: SelectSubset<T, UssdSessionDeleteArgs<ExtArgs>>): Prisma__UssdSessionClient<$Result.GetResult<Prisma.$UssdSessionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one UssdSession.
-     * @param {UssdSessionUpdateArgs} args - Arguments to update one UssdSession.
-     * @example
-     * // Update one UssdSession
-     * const ussdSession = await prisma.ussdSession.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends UssdSessionUpdateArgs>(args: SelectSubset<T, UssdSessionUpdateArgs<ExtArgs>>): Prisma__UssdSessionClient<$Result.GetResult<Prisma.$UssdSessionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more UssdSessions.
-     * @param {UssdSessionDeleteManyArgs} args - Arguments to filter UssdSessions to delete.
-     * @example
-     * // Delete a few UssdSessions
-     * const { count } = await prisma.ussdSession.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends UssdSessionDeleteManyArgs>(args?: SelectSubset<T, UssdSessionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more UssdSessions.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UssdSessionUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many UssdSessions
-     * const ussdSession = await prisma.ussdSession.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends UssdSessionUpdateManyArgs>(args: SelectSubset<T, UssdSessionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more UssdSessions and returns the data updated in the database.
-     * @param {UssdSessionUpdateManyAndReturnArgs} args - Arguments to update many UssdSessions.
-     * @example
-     * // Update many UssdSessions
-     * const ussdSession = await prisma.ussdSession.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more UssdSessions and only return the `sessionId`
-     * const ussdSessionWithSessionIdOnly = await prisma.ussdSession.updateManyAndReturn({
-     *   select: { sessionId: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends UssdSessionUpdateManyAndReturnArgs>(args: SelectSubset<T, UssdSessionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UssdSessionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one UssdSession.
-     * @param {UssdSessionUpsertArgs} args - Arguments to update or create a UssdSession.
-     * @example
-     * // Update or create a UssdSession
-     * const ussdSession = await prisma.ussdSession.upsert({
-     *   create: {
-     *     // ... data to create a UssdSession
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the UssdSession we want to update
-     *   }
-     * })
-     */
-    upsert<T extends UssdSessionUpsertArgs>(args: SelectSubset<T, UssdSessionUpsertArgs<ExtArgs>>): Prisma__UssdSessionClient<$Result.GetResult<Prisma.$UssdSessionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of UssdSessions.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UssdSessionCountArgs} args - Arguments to filter UssdSessions to count.
-     * @example
-     * // Count the number of UssdSessions
-     * const count = await prisma.ussdSession.count({
-     *   where: {
-     *     // ... the filter for the UssdSessions we want to count
-     *   }
-     * })
-    **/
-    count<T extends UssdSessionCountArgs>(
-      args?: Subset<T, UssdSessionCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], UssdSessionCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a UssdSession.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UssdSessionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends UssdSessionAggregateArgs>(args: Subset<T, UssdSessionAggregateArgs>): Prisma.PrismaPromise<GetUssdSessionAggregateType<T>>
-
-    /**
-     * Group by UssdSession.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UssdSessionGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends UssdSessionGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: UssdSessionGroupByArgs['orderBy'] }
-        : { orderBy?: UssdSessionGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, UssdSessionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUssdSessionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the UssdSession model
-   */
-  readonly fields: UssdSessionFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for UssdSession.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__UssdSessionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the UssdSession model
-   */
-  interface UssdSessionFieldRefs {
-    readonly sessionId: FieldRef<"UssdSession", 'String'>
-    readonly step: FieldRef<"UssdSession", 'String'>
-    readonly payload: FieldRef<"UssdSession", 'Json'>
-    readonly phoneNumber: FieldRef<"UssdSession", 'String'>
-    readonly updatedAt: FieldRef<"UssdSession", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * UssdSession findUnique
-   */
-  export type UssdSessionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UssdSession
-     */
-    select?: UssdSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UssdSession
-     */
-    omit?: UssdSessionOmit<ExtArgs> | null
-    /**
-     * Filter, which UssdSession to fetch.
-     */
-    where: UssdSessionWhereUniqueInput
-  }
-
-  /**
-   * UssdSession findUniqueOrThrow
-   */
-  export type UssdSessionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UssdSession
-     */
-    select?: UssdSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UssdSession
-     */
-    omit?: UssdSessionOmit<ExtArgs> | null
-    /**
-     * Filter, which UssdSession to fetch.
-     */
-    where: UssdSessionWhereUniqueInput
-  }
-
-  /**
-   * UssdSession findFirst
-   */
-  export type UssdSessionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UssdSession
-     */
-    select?: UssdSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UssdSession
-     */
-    omit?: UssdSessionOmit<ExtArgs> | null
-    /**
-     * Filter, which UssdSession to fetch.
-     */
-    where?: UssdSessionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of UssdSessions to fetch.
-     */
-    orderBy?: UssdSessionOrderByWithRelationInput | UssdSessionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for UssdSessions.
-     */
-    cursor?: UssdSessionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` UssdSessions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` UssdSessions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of UssdSessions.
-     */
-    distinct?: UssdSessionScalarFieldEnum | UssdSessionScalarFieldEnum[]
-  }
-
-  /**
-   * UssdSession findFirstOrThrow
-   */
-  export type UssdSessionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UssdSession
-     */
-    select?: UssdSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UssdSession
-     */
-    omit?: UssdSessionOmit<ExtArgs> | null
-    /**
-     * Filter, which UssdSession to fetch.
-     */
-    where?: UssdSessionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of UssdSessions to fetch.
-     */
-    orderBy?: UssdSessionOrderByWithRelationInput | UssdSessionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for UssdSessions.
-     */
-    cursor?: UssdSessionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` UssdSessions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` UssdSessions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of UssdSessions.
-     */
-    distinct?: UssdSessionScalarFieldEnum | UssdSessionScalarFieldEnum[]
-  }
-
-  /**
-   * UssdSession findMany
-   */
-  export type UssdSessionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UssdSession
-     */
-    select?: UssdSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UssdSession
-     */
-    omit?: UssdSessionOmit<ExtArgs> | null
-    /**
-     * Filter, which UssdSessions to fetch.
-     */
-    where?: UssdSessionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of UssdSessions to fetch.
-     */
-    orderBy?: UssdSessionOrderByWithRelationInput | UssdSessionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing UssdSessions.
-     */
-    cursor?: UssdSessionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` UssdSessions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` UssdSessions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of UssdSessions.
-     */
-    distinct?: UssdSessionScalarFieldEnum | UssdSessionScalarFieldEnum[]
-  }
-
-  /**
-   * UssdSession create
-   */
-  export type UssdSessionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UssdSession
-     */
-    select?: UssdSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UssdSession
-     */
-    omit?: UssdSessionOmit<ExtArgs> | null
-    /**
-     * The data needed to create a UssdSession.
-     */
-    data: XOR<UssdSessionCreateInput, UssdSessionUncheckedCreateInput>
-  }
-
-  /**
-   * UssdSession createMany
-   */
-  export type UssdSessionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many UssdSessions.
-     */
-    data: UssdSessionCreateManyInput | UssdSessionCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * UssdSession createManyAndReturn
-   */
-  export type UssdSessionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UssdSession
-     */
-    select?: UssdSessionSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the UssdSession
-     */
-    omit?: UssdSessionOmit<ExtArgs> | null
-    /**
-     * The data used to create many UssdSessions.
-     */
-    data: UssdSessionCreateManyInput | UssdSessionCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * UssdSession update
-   */
-  export type UssdSessionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UssdSession
-     */
-    select?: UssdSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UssdSession
-     */
-    omit?: UssdSessionOmit<ExtArgs> | null
-    /**
-     * The data needed to update a UssdSession.
-     */
-    data: XOR<UssdSessionUpdateInput, UssdSessionUncheckedUpdateInput>
-    /**
-     * Choose, which UssdSession to update.
-     */
-    where: UssdSessionWhereUniqueInput
-  }
-
-  /**
-   * UssdSession updateMany
-   */
-  export type UssdSessionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update UssdSessions.
-     */
-    data: XOR<UssdSessionUpdateManyMutationInput, UssdSessionUncheckedUpdateManyInput>
-    /**
-     * Filter which UssdSessions to update
-     */
-    where?: UssdSessionWhereInput
-    /**
-     * Limit how many UssdSessions to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * UssdSession updateManyAndReturn
-   */
-  export type UssdSessionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UssdSession
-     */
-    select?: UssdSessionSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the UssdSession
-     */
-    omit?: UssdSessionOmit<ExtArgs> | null
-    /**
-     * The data used to update UssdSessions.
-     */
-    data: XOR<UssdSessionUpdateManyMutationInput, UssdSessionUncheckedUpdateManyInput>
-    /**
-     * Filter which UssdSessions to update
-     */
-    where?: UssdSessionWhereInput
-    /**
-     * Limit how many UssdSessions to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * UssdSession upsert
-   */
-  export type UssdSessionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UssdSession
-     */
-    select?: UssdSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UssdSession
-     */
-    omit?: UssdSessionOmit<ExtArgs> | null
-    /**
-     * The filter to search for the UssdSession to update in case it exists.
-     */
-    where: UssdSessionWhereUniqueInput
-    /**
-     * In case the UssdSession found by the `where` argument doesn't exist, create a new UssdSession with this data.
-     */
-    create: XOR<UssdSessionCreateInput, UssdSessionUncheckedCreateInput>
-    /**
-     * In case the UssdSession was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<UssdSessionUpdateInput, UssdSessionUncheckedUpdateInput>
-  }
-
-  /**
-   * UssdSession delete
-   */
-  export type UssdSessionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UssdSession
-     */
-    select?: UssdSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UssdSession
-     */
-    omit?: UssdSessionOmit<ExtArgs> | null
-    /**
-     * Filter which UssdSession to delete.
-     */
-    where: UssdSessionWhereUniqueInput
-  }
-
-  /**
-   * UssdSession deleteMany
-   */
-  export type UssdSessionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which UssdSessions to delete
-     */
-    where?: UssdSessionWhereInput
-    /**
-     * Limit how many UssdSessions to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * UssdSession without action
-   */
-  export type UssdSessionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UssdSession
-     */
-    select?: UssdSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UssdSession
-     */
-    omit?: UssdSessionOmit<ExtArgs> | null
   }
 
 
@@ -7957,6 +6895,8 @@ export namespace Prisma {
     id: 'id',
     conversationId: 'conversationId',
     contact: 'contact',
+    userName: 'userName',
+    userEmail: 'userEmail',
     summary: 'summary',
     status: 'status',
     channel: 'channel',
@@ -7964,17 +6904,6 @@ export namespace Prisma {
   };
 
   export type EscalationScalarFieldEnum = (typeof EscalationScalarFieldEnum)[keyof typeof EscalationScalarFieldEnum]
-
-
-  export const UssdSessionScalarFieldEnum: {
-    sessionId: 'sessionId',
-    step: 'step',
-    payload: 'payload',
-    phoneNumber: 'phoneNumber',
-    updatedAt: 'updatedAt'
-  };
-
-  export type UssdSessionScalarFieldEnum = (typeof UssdSessionScalarFieldEnum)[keyof typeof UssdSessionScalarFieldEnum]
 
 
   export const DocumentScalarFieldEnum: {
@@ -8325,6 +7254,8 @@ export namespace Prisma {
     id?: UuidFilter<"Escalation"> | string
     conversationId?: UuidNullableFilter<"Escalation"> | string | null
     contact?: StringFilter<"Escalation"> | string
+    userName?: StringNullableFilter<"Escalation"> | string | null
+    userEmail?: StringNullableFilter<"Escalation"> | string | null
     summary?: StringFilter<"Escalation"> | string
     status?: EnumEscalationStatusFilter<"Escalation"> | $Enums.EscalationStatus
     channel?: EnumChannelFilter<"Escalation"> | $Enums.Channel
@@ -8336,6 +7267,8 @@ export namespace Prisma {
     id?: SortOrder
     conversationId?: SortOrderInput | SortOrder
     contact?: SortOrder
+    userName?: SortOrderInput | SortOrder
+    userEmail?: SortOrderInput | SortOrder
     summary?: SortOrder
     status?: SortOrder
     channel?: SortOrder
@@ -8350,6 +7283,8 @@ export namespace Prisma {
     NOT?: EscalationWhereInput | EscalationWhereInput[]
     conversationId?: UuidNullableFilter<"Escalation"> | string | null
     contact?: StringFilter<"Escalation"> | string
+    userName?: StringNullableFilter<"Escalation"> | string | null
+    userEmail?: StringNullableFilter<"Escalation"> | string | null
     summary?: StringFilter<"Escalation"> | string
     status?: EnumEscalationStatusFilter<"Escalation"> | $Enums.EscalationStatus
     channel?: EnumChannelFilter<"Escalation"> | $Enums.Channel
@@ -8361,6 +7296,8 @@ export namespace Prisma {
     id?: SortOrder
     conversationId?: SortOrderInput | SortOrder
     contact?: SortOrder
+    userName?: SortOrderInput | SortOrder
+    userEmail?: SortOrderInput | SortOrder
     summary?: SortOrder
     status?: SortOrder
     channel?: SortOrder
@@ -8377,62 +7314,12 @@ export namespace Prisma {
     id?: UuidWithAggregatesFilter<"Escalation"> | string
     conversationId?: UuidNullableWithAggregatesFilter<"Escalation"> | string | null
     contact?: StringWithAggregatesFilter<"Escalation"> | string
+    userName?: StringNullableWithAggregatesFilter<"Escalation"> | string | null
+    userEmail?: StringNullableWithAggregatesFilter<"Escalation"> | string | null
     summary?: StringWithAggregatesFilter<"Escalation"> | string
     status?: EnumEscalationStatusWithAggregatesFilter<"Escalation"> | $Enums.EscalationStatus
     channel?: EnumChannelWithAggregatesFilter<"Escalation"> | $Enums.Channel
     createdAt?: DateTimeWithAggregatesFilter<"Escalation"> | Date | string
-  }
-
-  export type UssdSessionWhereInput = {
-    AND?: UssdSessionWhereInput | UssdSessionWhereInput[]
-    OR?: UssdSessionWhereInput[]
-    NOT?: UssdSessionWhereInput | UssdSessionWhereInput[]
-    sessionId?: StringFilter<"UssdSession"> | string
-    step?: StringFilter<"UssdSession"> | string
-    payload?: JsonNullableFilter<"UssdSession">
-    phoneNumber?: StringNullableFilter<"UssdSession"> | string | null
-    updatedAt?: DateTimeFilter<"UssdSession"> | Date | string
-  }
-
-  export type UssdSessionOrderByWithRelationInput = {
-    sessionId?: SortOrder
-    step?: SortOrder
-    payload?: SortOrderInput | SortOrder
-    phoneNumber?: SortOrderInput | SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type UssdSessionWhereUniqueInput = Prisma.AtLeast<{
-    sessionId?: string
-    AND?: UssdSessionWhereInput | UssdSessionWhereInput[]
-    OR?: UssdSessionWhereInput[]
-    NOT?: UssdSessionWhereInput | UssdSessionWhereInput[]
-    step?: StringFilter<"UssdSession"> | string
-    payload?: JsonNullableFilter<"UssdSession">
-    phoneNumber?: StringNullableFilter<"UssdSession"> | string | null
-    updatedAt?: DateTimeFilter<"UssdSession"> | Date | string
-  }, "sessionId">
-
-  export type UssdSessionOrderByWithAggregationInput = {
-    sessionId?: SortOrder
-    step?: SortOrder
-    payload?: SortOrderInput | SortOrder
-    phoneNumber?: SortOrderInput | SortOrder
-    updatedAt?: SortOrder
-    _count?: UssdSessionCountOrderByAggregateInput
-    _max?: UssdSessionMaxOrderByAggregateInput
-    _min?: UssdSessionMinOrderByAggregateInput
-  }
-
-  export type UssdSessionScalarWhereWithAggregatesInput = {
-    AND?: UssdSessionScalarWhereWithAggregatesInput | UssdSessionScalarWhereWithAggregatesInput[]
-    OR?: UssdSessionScalarWhereWithAggregatesInput[]
-    NOT?: UssdSessionScalarWhereWithAggregatesInput | UssdSessionScalarWhereWithAggregatesInput[]
-    sessionId?: StringWithAggregatesFilter<"UssdSession"> | string
-    step?: StringWithAggregatesFilter<"UssdSession"> | string
-    payload?: JsonNullableWithAggregatesFilter<"UssdSession">
-    phoneNumber?: StringNullableWithAggregatesFilter<"UssdSession"> | string | null
-    updatedAt?: DateTimeWithAggregatesFilter<"UssdSession"> | Date | string
   }
 
   export type DocumentWhereInput = {
@@ -8720,6 +7607,8 @@ export namespace Prisma {
   export type EscalationCreateInput = {
     id?: string
     contact: string
+    userName?: string | null
+    userEmail?: string | null
     summary: string
     status?: $Enums.EscalationStatus
     channel?: $Enums.Channel
@@ -8731,6 +7620,8 @@ export namespace Prisma {
     id?: string
     conversationId?: string | null
     contact: string
+    userName?: string | null
+    userEmail?: string | null
     summary: string
     status?: $Enums.EscalationStatus
     channel?: $Enums.Channel
@@ -8740,6 +7631,8 @@ export namespace Prisma {
   export type EscalationUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     contact?: StringFieldUpdateOperationsInput | string
+    userName?: NullableStringFieldUpdateOperationsInput | string | null
+    userEmail?: NullableStringFieldUpdateOperationsInput | string | null
     summary?: StringFieldUpdateOperationsInput | string
     status?: EnumEscalationStatusFieldUpdateOperationsInput | $Enums.EscalationStatus
     channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
@@ -8751,6 +7644,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     conversationId?: NullableStringFieldUpdateOperationsInput | string | null
     contact?: StringFieldUpdateOperationsInput | string
+    userName?: NullableStringFieldUpdateOperationsInput | string | null
+    userEmail?: NullableStringFieldUpdateOperationsInput | string | null
     summary?: StringFieldUpdateOperationsInput | string
     status?: EnumEscalationStatusFieldUpdateOperationsInput | $Enums.EscalationStatus
     channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
@@ -8761,6 +7656,8 @@ export namespace Prisma {
     id?: string
     conversationId?: string | null
     contact: string
+    userName?: string | null
+    userEmail?: string | null
     summary: string
     status?: $Enums.EscalationStatus
     channel?: $Enums.Channel
@@ -8770,6 +7667,8 @@ export namespace Prisma {
   export type EscalationUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     contact?: StringFieldUpdateOperationsInput | string
+    userName?: NullableStringFieldUpdateOperationsInput | string | null
+    userEmail?: NullableStringFieldUpdateOperationsInput | string | null
     summary?: StringFieldUpdateOperationsInput | string
     status?: EnumEscalationStatusFieldUpdateOperationsInput | $Enums.EscalationStatus
     channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
@@ -8780,66 +7679,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     conversationId?: NullableStringFieldUpdateOperationsInput | string | null
     contact?: StringFieldUpdateOperationsInput | string
+    userName?: NullableStringFieldUpdateOperationsInput | string | null
+    userEmail?: NullableStringFieldUpdateOperationsInput | string | null
     summary?: StringFieldUpdateOperationsInput | string
     status?: EnumEscalationStatusFieldUpdateOperationsInput | $Enums.EscalationStatus
     channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type UssdSessionCreateInput = {
-    sessionId: string
-    step: string
-    payload?: NullableJsonNullValueInput | InputJsonValue
-    phoneNumber?: string | null
-    updatedAt?: Date | string
-  }
-
-  export type UssdSessionUncheckedCreateInput = {
-    sessionId: string
-    step: string
-    payload?: NullableJsonNullValueInput | InputJsonValue
-    phoneNumber?: string | null
-    updatedAt?: Date | string
-  }
-
-  export type UssdSessionUpdateInput = {
-    sessionId?: StringFieldUpdateOperationsInput | string
-    step?: StringFieldUpdateOperationsInput | string
-    payload?: NullableJsonNullValueInput | InputJsonValue
-    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type UssdSessionUncheckedUpdateInput = {
-    sessionId?: StringFieldUpdateOperationsInput | string
-    step?: StringFieldUpdateOperationsInput | string
-    payload?: NullableJsonNullValueInput | InputJsonValue
-    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type UssdSessionCreateManyInput = {
-    sessionId: string
-    step: string
-    payload?: NullableJsonNullValueInput | InputJsonValue
-    phoneNumber?: string | null
-    updatedAt?: Date | string
-  }
-
-  export type UssdSessionUpdateManyMutationInput = {
-    sessionId?: StringFieldUpdateOperationsInput | string
-    step?: StringFieldUpdateOperationsInput | string
-    payload?: NullableJsonNullValueInput | InputJsonValue
-    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type UssdSessionUncheckedUpdateManyInput = {
-    sessionId?: StringFieldUpdateOperationsInput | string
-    step?: StringFieldUpdateOperationsInput | string
-    payload?: NullableJsonNullValueInput | InputJsonValue
-    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DocumentCreateInput = {
@@ -9339,6 +8184,8 @@ export namespace Prisma {
     id?: SortOrder
     conversationId?: SortOrder
     contact?: SortOrder
+    userName?: SortOrder
+    userEmail?: SortOrder
     summary?: SortOrder
     status?: SortOrder
     channel?: SortOrder
@@ -9349,6 +8196,8 @@ export namespace Prisma {
     id?: SortOrder
     conversationId?: SortOrder
     contact?: SortOrder
+    userName?: SortOrder
+    userEmail?: SortOrder
     summary?: SortOrder
     status?: SortOrder
     channel?: SortOrder
@@ -9359,6 +8208,8 @@ export namespace Prisma {
     id?: SortOrder
     conversationId?: SortOrder
     contact?: SortOrder
+    userName?: SortOrder
+    userEmail?: SortOrder
     summary?: SortOrder
     status?: SortOrder
     channel?: SortOrder
@@ -9388,28 +8239,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumEscalationStatusFilter<$PrismaModel>
     _max?: NestedEnumEscalationStatusFilter<$PrismaModel>
-  }
-
-  export type UssdSessionCountOrderByAggregateInput = {
-    sessionId?: SortOrder
-    step?: SortOrder
-    payload?: SortOrder
-    phoneNumber?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type UssdSessionMaxOrderByAggregateInput = {
-    sessionId?: SortOrder
-    step?: SortOrder
-    phoneNumber?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type UssdSessionMinOrderByAggregateInput = {
-    sessionId?: SortOrder
-    step?: SortOrder
-    phoneNumber?: SortOrder
-    updatedAt?: SortOrder
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -10085,6 +8914,8 @@ export namespace Prisma {
   export type EscalationCreateWithoutConversationInput = {
     id?: string
     contact: string
+    userName?: string | null
+    userEmail?: string | null
     summary: string
     status?: $Enums.EscalationStatus
     channel?: $Enums.Channel
@@ -10094,6 +8925,8 @@ export namespace Prisma {
   export type EscalationUncheckedCreateWithoutConversationInput = {
     id?: string
     contact: string
+    userName?: string | null
+    userEmail?: string | null
     summary: string
     status?: $Enums.EscalationStatus
     channel?: $Enums.Channel
@@ -10163,6 +8996,8 @@ export namespace Prisma {
     id?: UuidFilter<"Escalation"> | string
     conversationId?: UuidNullableFilter<"Escalation"> | string | null
     contact?: StringFilter<"Escalation"> | string
+    userName?: StringNullableFilter<"Escalation"> | string | null
+    userEmail?: StringNullableFilter<"Escalation"> | string | null
     summary?: StringFilter<"Escalation"> | string
     status?: EnumEscalationStatusFilter<"Escalation"> | $Enums.EscalationStatus
     channel?: EnumChannelFilter<"Escalation"> | $Enums.Channel
@@ -10302,6 +9137,8 @@ export namespace Prisma {
   export type EscalationCreateManyConversationInput = {
     id?: string
     contact: string
+    userName?: string | null
+    userEmail?: string | null
     summary: string
     status?: $Enums.EscalationStatus
     channel?: $Enums.Channel
@@ -10341,6 +9178,8 @@ export namespace Prisma {
   export type EscalationUpdateWithoutConversationInput = {
     id?: StringFieldUpdateOperationsInput | string
     contact?: StringFieldUpdateOperationsInput | string
+    userName?: NullableStringFieldUpdateOperationsInput | string | null
+    userEmail?: NullableStringFieldUpdateOperationsInput | string | null
     summary?: StringFieldUpdateOperationsInput | string
     status?: EnumEscalationStatusFieldUpdateOperationsInput | $Enums.EscalationStatus
     channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
@@ -10350,6 +9189,8 @@ export namespace Prisma {
   export type EscalationUncheckedUpdateWithoutConversationInput = {
     id?: StringFieldUpdateOperationsInput | string
     contact?: StringFieldUpdateOperationsInput | string
+    userName?: NullableStringFieldUpdateOperationsInput | string | null
+    userEmail?: NullableStringFieldUpdateOperationsInput | string | null
     summary?: StringFieldUpdateOperationsInput | string
     status?: EnumEscalationStatusFieldUpdateOperationsInput | $Enums.EscalationStatus
     channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
@@ -10359,6 +9200,8 @@ export namespace Prisma {
   export type EscalationUncheckedUpdateManyWithoutConversationInput = {
     id?: StringFieldUpdateOperationsInput | string
     contact?: StringFieldUpdateOperationsInput | string
+    userName?: NullableStringFieldUpdateOperationsInput | string | null
+    userEmail?: NullableStringFieldUpdateOperationsInput | string | null
     summary?: StringFieldUpdateOperationsInput | string
     status?: EnumEscalationStatusFieldUpdateOperationsInput | $Enums.EscalationStatus
     channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel

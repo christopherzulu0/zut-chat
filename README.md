@@ -1,13 +1,13 @@
 # ZUT AI Student Support Chatbot
 
-AI-powered student support for **Zambia University of Technology (ZUT)** using Retrieval-Augmented Generation (RAG), Clerk authentication, and Africa's Talking USSD.
+AI-powered student support for **Zambia University of Technology (ZUT)** using Retrieval-Augmented Generation (RAG), Clerk authentication, and a web chat interface.
 
 ## Features
 
+- **Landing page** — marketing site with static chat preview; sign-in required to chat
 - **Web chat** — natural language Q&A grounded in official university documents (OpenAI + Pinecone)
-- **Clerk auth** — sign-in for students; guest mode with rate limits for prospects
+- **Clerk auth** — students must sign in before using chat
 - **Admin dashboard** — upload PDFs, seed knowledge base, view metrics and escalations
-- **USSD** — feature-phone access via Africa's Talking (`/api/ussd`)
 - **Human escalation** — “Contact staff” creates tickets and optional email alerts
 
 ## Tech stack
@@ -18,15 +18,13 @@ AI-powered student support for **Zambia University of Technology (ZUT)** using R
 | Auth | Clerk (`@clerk/nextjs`) |
 | RAG | LangChain.js, OpenAI, Pinecone |
 | Database | PostgreSQL + Prisma ORM |
-| USSD | Africa's Talking |
 
 ## Prerequisites
 
-1. [Clerk](https://dashboard.clerk.com) application (keyless mode works locally without keys)
-2. [OpenAI API key](https://platform.openai.com/api-keys) — `OPENAI_API_KEY` (defaults: `gpt-4o-mini` chat, `text-embedding-3-small` embeddings)
-3. [Pinecone](https://www.pinecone.io) — dense index with **768 dimensions** (see `OPENAI_EMBEDDING_DIMENSION`)
+1. [Clerk](https://dashboard.clerk.com) application
+2. [OpenAI API key](https://platform.openai.com/api-keys)
+3. [Pinecone](https://www.pinecone.io) — dense index with **768 dimensions**
 4. PostgreSQL — Neon, Supabase, or local
-5. [Africa's Talking](https://africastalking.com) — USSD service code and API credentials
 
 ## Setup
 
@@ -39,93 +37,62 @@ Fill in `.env.local` (see `.env.example`).
 
 ### Database
 
-Set `DATABASE_URL` in `.env.local`, then apply the Prisma schema:
-
 ```bash
 pnpm db:push
-# or for versioned migrations:
-pnpm db:migrate
-```
-
-Generate the Prisma client after schema changes:
-
-```bash
 pnpm db:generate
 ```
 
 ### Pinecone index
 
-Create a **dense** serverless index (not sparse) named `zut-student-support` (or match `PINECONE_INDEX`):
+Create a **dense** serverless index with **768 dimensions** and metric **cosine**.
 
-| Setting | Value |
-|---------|--------|
-| Vector type | **Dense** (standard vector search) |
-| Dimensions | **768** (`text-embedding-3-small` with `OPENAI_EMBEDDING_DIMENSION=768`) |
-| Metric | cosine |
-
-Sparse indexes are not supported — seed will fail with `Upserting dense vectors is not supported for sparse indexes`.
-
-> **After changing embedding models**, re-seed (`pnpm seed`) so Pinecone vectors match the new embedding space. If every chat reply says it could not find information, the index is likely empty or still has old Gemini vectors — run `pnpm seed` again.
-
-**Chat always says “could not find reliable information”?**
-
-Console shows `[rag] Low retrieval: { topScore: 0.04, ... }`? Your Pinecone index still has **old Gemini vectors** while chat uses **OpenAI** embeddings (scores stay near 0.04).
+After switching embedding models, run:
 
 ```bash
 pnpm seed:reset
 ```
 
-That deletes all vectors and re-seeds with OpenAI, then verifies similarity ≥ 0.35.
-
-1. `pnpm debug:rag` — check index dimension matches `OPENAI_EMBEDDING_DIMENSION` (768).
-2. Optional: lower `RAG_MIN_SCORE` in `.env` only if scores are healthy (≥ 0.35) but slightly below 0.5.
-
 ### Seed knowledge base
-
-Seeding loads:
-
-- Hardcoded FAQ snippets in `lib/rag/ingest.ts` (fees, admissions, ID, etc.)
-- All markdown files in [`data/knowledge/`](data/knowledge/), including:
-  - [`academic-calendar-2026-2027.md`](data/knowledge/academic-calendar-2026-2027.md) — full academic calendar (split into semester chunks for RAG)
-  - [`zut-faq.md`](data/knowledge/zut-faq.md) — FAQ by topic
-
-After adding or editing files in `data/knowledge/`, **re-seed** so Pinecone picks up the changes:
-
-As an admin user (set `publicMetadata.role` to `admin` in Clerk):
-
-1. Sign in → **Admin** → **Seed sample knowledge base**
-
-Or CLI:
 
 ```bash
 pnpm seed
+# or wipe and re-seed:
+pnpm seed:reset
 ```
-
-**Seed fails with connect timeout or exit code `3221226505`?**
-
-1. Confirm keys are in `.env` or `.env.local` (`OPENAI_API_KEY`, `PINECONE_API_KEY`, `PINECONE_INDEX`).
-2. In the [Pinecone console](https://app.pinecone.io), open your index and copy its **host** URL into `.env`:
-   ```env
-   PINECONE_HOST=https://your-index-xxxx.svc.region.pinecone.io
-   ```
-   This avoids calling `api.pinecone.io` during seed (common on restricted networks).
-3. Test outbound HTTPS from PowerShell:
-   ```powershell
-   curl.exe -I --max-time 15 "https://api.openai.com"
-   curl.exe -I --max-time 15 "https://api.pinecone.io"
-   ```
-   If these time out, use another network or a VPN — the app cannot reach OpenAI/Pinecone from your machine.
-4. Optional: slow seed? Increase `OPENAI_EMBED_DELAY_MS` (e.g. `500`).
-
-Place new official documents as `.md` files under `data/knowledge/` (or upload PDFs via Admin).
 
 ### Admin role in Clerk
 
-In [Clerk Dashboard](https://dashboard.clerk.com) → Users → select user → **Public metadata**:
+**Option A — Clerk metadata (production)**
+
+1. [Clerk Dashboard](https://dashboard.clerk.com) → Users → your user → **Public metadata**:
 
 ```json
 { "role": "admin" }
 ```
+
+2. Clerk Dashboard → **Sessions** → **Customize session token** (so middleware can read the role):
+
+```json
+{
+  "metadata": {
+    "role": "{{user.public_metadata.role}}"
+  }
+}
+```
+
+3. Sign out and sign back in to refresh your session token.
+
+**Option B — env fallback (local dev)**
+
+Add your Clerk user ID to `.env.local`:
+
+```
+ADMIN_USER_IDS=user_xxxxxxxxxx
+```
+
+Copy the ID from Clerk Dashboard → Users, or from your profile in the app header.
+
+After either option, admins see **Admin** in the header and an **Admin dashboard** button on `/chat`.
 
 ## Development
 
@@ -133,86 +100,34 @@ In [Clerk Dashboard](https://dashboard.clerk.com) → Users → select user → 
 pnpm dev
 ```
 
-### `POST /api/chat` returns 404
+- `/` — public landing page
+- `/chat` — requires sign-in
+- `POST /api/chat` — requires authenticated user (401 if signed out)
 
-Usually a **stale Turbopack dev cache** — the route exists (`app/api/chat/route.ts`) but the running dev server did not register API routes.
-
-1. Stop all `next dev` processes (close terminals or `taskkill` the Node PID shown in the terminal).
-2. Clear the cache and restart:
-
-```bash
-pnpm dev:clean
-```
-
-3. Confirm the dev log shows `POST /api/chat 200` (not an HTML 404 page).
-
-If port 3000 is busy, Next may use **3001** — use the URL printed in the terminal.
-
-Open [http://localhost:3000](http://localhost:3000).
-
-## USSD (Africa's Talking)
-
-1. Register a USSD service code in the AT dashboard.
-2. Set callback URL to `https://<your-host>/api/ussd`.
-3. Configure `.env.local`:
-
-```
-AT_API_KEY=...
-AT_USERNAME=sandbox
-AT_USSD_SERVICE_CODE=*384*123#
-AT_USSD_WEBHOOK_SECRET=optional-shared-secret
-```
-
-**Local testing with ngrok:**
-
-```bash
-ngrok http 3000
-# Paste https URL + /api/ussd into AT dashboard
-```
-
-**Simulate a request:**
-
-```bash
-curl -X POST http://localhost:3000/api/ussd \
-  -d "sessionId=test1&phoneNumber=%2B260970000000&serviceCode=*384*1%23&text="
-```
+If routes 404 after adding API files, run `pnpm dev:clean`.
 
 ## Scripts
 
 | Command | Description |
 |---------|-------------|
 | `pnpm dev` | Start dev server |
+| `pnpm dev:clean` | Clear `.next` and start dev |
 | `pnpm build` | Production build |
-| `pnpm test` | Run Vitest unit tests |
-| `pnpm seed` | Seed Pinecone from sample ZUT docs |
-| `pnpm benchmark` | Run latency/accuracy benchmark |
-| `pnpm db:push` | Push Prisma schema to Postgres |
-| `pnpm db:migrate` | Create/run Prisma migrations |
-| `pnpm db:studio` | Open Prisma Studio |
+| `pnpm test` | Run Vitest |
+| `pnpm seed` | Seed Pinecone |
+| `pnpm seed:reset` | Clear index + re-seed + verify retrieval |
+| `pnpm debug:rag` | Check Pinecone scores |
+| `pnpm db:push` | Push Prisma schema |
 
 ## API routes
 
 | Route | Auth | Description |
 |-------|------|-------------|
-| `POST /api/chat` | Public (guest limits) | Chat / escalate |
-| `POST /api/ussd` | Public (AT webhook) | USSD handler |
+| `POST /api/chat` | Signed-in user | Chat / escalate |
 | `POST /api/admin/documents` | Admin | Upload PDF |
 | `GET /api/admin/metrics` | Admin | Query metrics |
 | `GET /api/admin/escalations` | Admin | Escalation list |
 | `POST /api/seed` | Admin | Seed knowledge base |
-
-## Deployment (Vercel)
-
-1. Import repo to Vercel.
-2. Add all environment variables from `.env.example`.
-3. Set USSD callback to `https://<vercel-domain>/api/ussd`.
-4. Use Neon/Supabase for `DATABASE_URL`.
-
-## Project objectives
-
-1. **Increase access to academic information** — 24/7 web + USSD channels  
-2. **Support basic phones** — USSD menu and short free-text questions  
-3. **Reduce access costs** — low-data USSD; no campus visit for routine FAQs  
 
 ## License
 

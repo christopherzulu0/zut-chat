@@ -2,11 +2,20 @@ import type { Escalation } from "@/generated/prisma";
 
 export async function notifyEscalation(ticket: Escalation): Promise<void> {
   const email = process.env.ESCALATION_EMAIL;
+  const studentLine = [
+    ticket.userName && `Name: ${ticket.userName}`,
+    ticket.userEmail && `Email: ${ticket.userEmail}`,
+    `Clerk ID: ${ticket.contact}`,
+  ]
+    .filter(Boolean)
+    .join("\n");
+
   const body = [
     `New escalation ticket: ${ticket.id}`,
     `Channel: ${ticket.channel}`,
-    `Contact: ${ticket.contact}`,
     `Status: ${ticket.status}`,
+    ``,
+    studentLine,
     ``,
     ticket.summary,
   ].join("\n");
@@ -22,7 +31,7 @@ export async function notifyEscalation(ticket: Escalation): Promise<void> {
         body: JSON.stringify({
           from: "ZUT Chatbot <onboarding@resend.dev>",
           to: [email],
-          subject: `[ZUT Chatbot] Escalation ${ticket.id.slice(0, 8)}`,
+          subject: `[ZUT Chatbot] Escalation ${ticket.id.slice(0, 8)}${ticket.userName ? ` — ${ticket.userName}` : ""}`,
           text: body,
         }),
       });

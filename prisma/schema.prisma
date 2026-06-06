@@ -10,7 +10,6 @@ datasource db {
 
 enum Channel {
   web
-  ussd
 }
 
 enum MessageRole {
@@ -62,6 +61,8 @@ model Escalation {
   id             String           @id @default(uuid()) @db.Uuid
   conversationId String?          @map("conversation_id") @db.Uuid
   contact        String
+  userName       String?          @map("user_name")
+  userEmail      String?          @map("user_email")
   summary        String
   status         EscalationStatus @default(open)
   channel        Channel          @default(web)
@@ -69,16 +70,6 @@ model Escalation {
   conversation   Conversation?    @relation(fields: [conversationId], references: [id], onDelete: SetNull)
 
   @@map("escalations")
-}
-
-model UssdSession {
-  sessionId   String   @id @map("session_id")
-  step        String
-  payload     Json?
-  phoneNumber String?  @map("phone_number")
-  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
-
-  @@map("ussd_sessions")
 }
 
 model Document {

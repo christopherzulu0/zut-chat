@@ -1,7 +1,15 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
+import {
+  AdminCard,
+  AdminShell,
+  EmptyState,
+  StatusBadge,
+} from "@/components/admin/admin-shell";
 import { DocumentUpload } from "@/components/admin/document-upload";
+import { EscalationsPanel } from "@/components/admin/escalations-panel";
 import { MetricsCards } from "@/components/admin/metrics-cards";
 
 type Doc = {
@@ -13,98 +21,141 @@ type Doc = {
   indexedAt: string | null;
 };
 
-type Escalation = {
-  id: string;
-  contact: string;
-  summary: string;
-  status: string;
-  channel: string;
-  createdAt: string;
-};
+function formatDate(iso: string) {
+  return new Date(iso).toLocaleString(undefined, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+}
 
 export default function AdminPage() {
   const [documents, setDocuments] = useState<Doc[]>([]);
-  const [escalations, setEscalations] = useState<Escalation[]>([]);
   const [seedStatus, setSeedStatus] = useState<string | null>(null);
+  const [seeding, setSeeding] = useState(false);
 
-  const load = useCallback(() => {
+  const loadDocuments = useCallback(() => {
     fetch("/api/admin/documents")
       .then((r) => r.json())
       .then((d) => setDocuments(d.documents ?? []));
-    fetch("/api/admin/escalations")
-      .then((r) => r.json())
-      .then((d) => setEscalations(d.escalations ?? []));
   }, []);
 
   useEffect(() => {
-    load();
-  }, [load]);
+    loadDocuments();
+  }, [loadDocuments]);
 
   async function seedKnowledge() {
-    setSeedStatus("Seeding...");
+    setSeeding(true);
+    setSeedStatus("Seeding knowledge base...");
     const res = await fetch("/api/seed", { method: "POST" });
     const data = await res.json();
     setSeedStatus(
-      res.ok ? `Seeded ${data.chunks} chunks` : data.error ?? "Failed"
+      res.ok ? `Seeded ${data.chunks} chunks successfully` : data.error ?? "Seed failed"
     );
-    load();
+    setSeeding(false);
+    loadDocuments();
   }
 
   return (
-    <div className="mx-auto max-w-6xl space-y-8 px-4 py-8">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-semibold">Admin Dashboard</h1>
-        <button
-          onClick={seedKnowledge}
-          className="rounded-lg border px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-900"
-        >
-          Seed sample knowledge base
-        </button>
-      </div>
-      {seedStatus && <p className="text-sm text-zinc-600">{seedStatus}</p>}
+    <AdminShell
+      title="Admin Dashboard"
+      description="Manage the knowledge base, monitor usage, and review student escalations."
+      actions={
+        <>
+          <Link
+            href="/chat"
+            className="rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 shadow-sm transition hover:border-emerald-400 hover:text-emerald-700"
+          >
+            Open chat
+          </Link>
+          <button
+            type="button"
+            onClick={seedKnowledge}
+            disabled={seeding}
+            className="rounded-full bg-emerald-700 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-emerald-700/20 transition hover:bg-emerald-800 disabled:opacity-50"
+          >
+            {seeding ? "Seeding..." : "Seed knowledge base"}
+          </button>
+        </>
+      }
+    >
+      {seedStatus && (
+        <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+          {seedStatus}
+        </div>
+      )}
 
       <MetricsCards />
 
-      <DocumentUpload onUploaded={load} />
+      <EscalationsPanel />
 
-      <section>
-        <h2 className="mb-3 font-medium">Indexed documents</h2>
-        <ul className="divide-y rounded-xl border">
-          {documents.length === 0 ? (
-            <li className="p-4 text-sm text-zinc-500">No documents yet</li>
-          ) : (
-            documents.map((d) => (
-              <li key={d.id} className="flex justify-between p-4 text-sm">
-                <span>
-                  {d.filename} ({d.category})
-                </span>
-                <span className="text-zinc-500">
-                  {d.chunkCount} chunks · {d.status}
-                </span>
-              </li>
-            ))
-          )}
-        </ul>
-      </section>
+      <div className="grid gap-6 lg:grid-cols-2">
+        <AdminCard
+          title="Upload document"
+          description="Add a PDF to the knowledge base. It will be chunked and indexed in Pinecone."
+        >
+          <DocumentUpload onUploaded={loadDocuments} />
+        </AdminCard>
 
-      <section>
-        <h2 className="mb-3 font-medium">Escalations</h2>
-        <ul className="divide-y rounded-xl border">
-          {escalations.length === 0 ? (
-            <li className="p-4 text-sm text-zinc-500">No escalations</li>
-          ) : (
-            escalations.map((e) => (
-              <li key={e.id} className="p-4 text-sm">
-                <p className="font-medium">
-                  {e.id.slice(0, 8)} · {e.channel} · {e.status}
-                </p>
-                <p className="text-zinc-500">{e.contact}</p>
-                <p className="mt-1">{e.summary}</p>
+        <AdminCard
+          title="Quick tips"
+          description="Keep the assistant accurate with up-to-date official documents."
+        >
+          <ul className="space-y-3 text-sm text-zinc-600">
+            <li className="flex gap-3">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-xs font-bold text-emerald-800">
+                1
+              </span>
+              Run <strong className="text-zinc-800">Seed knowledge base</strong> after first setup or when switching embedding models.
+            </li>
+            <li className="flex gap-3">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-xs font-bold text-emerald-800">
+                2
+              </span>
+              Upload PDFs by category so retrieval filters work correctly.
+            </li>
+            <li className="flex gap-3">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-xs font-bold text-emerald-800">
+                3
+              </span>
+              Markdown files in <code className="rounded bg-zinc-100 px-1">data/knowledge/</code> are included when seeding.
+            </li>
+          </ul>
+        </AdminCard>
+      </div>
+
+      <AdminCard
+        title="Indexed documents"
+        description={`${documents.length} document${documents.length === 1 ? "" : "s"} in the database`}
+      >
+        {documents.length === 0 ? (
+          <EmptyState message="No uploaded documents yet. Seed the knowledge base or upload a PDF above." />
+        ) : (
+          <ul className="divide-y divide-zinc-100">
+            {documents.map((d) => (
+              <li
+                key={d.id}
+                className="flex flex-wrap items-center justify-between gap-3 py-4 first:pt-0 last:pb-0"
+              >
+                <div className="min-w-0">
+                  <p className="truncate font-medium text-zinc-900">
+                    {d.filename}
+                  </p>
+                  <p className="mt-0.5 text-xs text-zinc-500 capitalize">
+                    {d.category}
+                    {d.indexedAt && ` · ${formatDate(d.indexedAt)}`}
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-sm text-zinc-500">
+                    {d.chunkCount ?? 0} chunks
+                  </span>
+                  <StatusBadge status={d.status} />
+                </div>
               </li>
-            ))
-          )}
-        </ul>
-      </section>
-    </div>
+            ))}
+          </ul>
+        )}
+      </AdminCard>
+    </AdminShell>
   );
 }

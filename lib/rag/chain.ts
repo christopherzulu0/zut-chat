@@ -187,9 +187,3 @@ export async function* streamRagQuery(
   }
   yield { type: "done", result };
 }
-
-export function truncateForUssd(text: string, max = 160): string {
-  const cleaned = text.replace(/\s+/g, " ").trim();
-  if (cleaned.length <= max) return cleaned;
-  return cleaned.slice(0, max - 3) + "...";
-}

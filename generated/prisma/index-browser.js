@@ -145,18 +145,12 @@ exports.Prisma.EscalationScalarFieldEnum = {
   id: 'id',
   conversationId: 'conversationId',
   contact: 'contact',
+  userName: 'userName',
+  userEmail: 'userEmail',
   summary: 'summary',
   status: 'status',
   channel: 'channel',
   createdAt: 'createdAt'
-};
-
-exports.Prisma.UssdSessionScalarFieldEnum = {
-  sessionId: 'sessionId',
-  step: 'step',
-  payload: 'payload',
-  phoneNumber: 'phoneNumber',
-  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.DocumentScalarFieldEnum = {
@@ -205,8 +199,7 @@ exports.Prisma.JsonNullValueFilter = {
   AnyNull: Prisma.AnyNull
 };
 exports.Channel = exports.$Enums.Channel = {
-  web: 'web',
-  ussd: 'ussd'
+  web: 'web'
 };
 
 exports.MessageRole = exports.$Enums.MessageRole = {
@@ -230,7 +223,6 @@ exports.Prisma.ModelName = {
   Conversation: 'Conversation',
   Message: 'Message',
   Escalation: 'Escalation',
-  UssdSession: 'UssdSession',
   Document: 'Document',
   QueryLog: 'QueryLog'
 };

@@ -11,11 +11,8 @@ import {
   addMessage,
   logQuery,
 } from "@/lib/db/queries";
-import {
-  getGuestSessionId,
-  checkGuestRateLimit,
-  hashQuery,
-} from "@/lib/guest-session";
+import { hashQuery } from "@/lib/utils/query-hash";
+import { getClerkUserContact } from "@/lib/auth/clerk-user";
 
 const bodySchema = z.object({
   message: z.string().min(1).max(2000),
@@ -32,20 +29,13 @@ export async function POST(req: NextRequest) {
 
     const { message, conversationId, escalate } = parsed.data;
     const session = await auth();
-    const userId = session.userId ?? null;
+    const userId = session.userId;
 
     if (!userId) {
-      const guestId = await getGuestSessionId();
-      const limit = checkGuestRateLimit(guestId);
-      if (!limit.allowed) {
-        return NextResponse.json(
-          {
-            error: "Guest limit reached. Sign in for unlimited access.",
-            remaining: 0,
-          },
-          { status: 429 }
-        );
-      }
+      return NextResponse.json(
+        { error: "Sign in to use the chat." },
+        { status: 401 }
+      );
     }
 
     if (escalate) {
@@ -58,18 +48,47 @@ export async function POST(req: NextRequest) {
       }
       const { createEscalation } = await import("@/lib/db/queries");
       const { notifyEscalation } = await import("@/lib/escalation/notify");
-      const contact = userId ?? (await getGuestSessionId());
+
+      let convId = conversationId;
+      if (!convId) {
+        const conv = await getOrCreateConversation({
+          userId,
+          channel: "web",
+        });
+        convId = conv.id;
+      }
+
+      await addMessage({
+        conversationId: convId,
+        role: "user",
+        content: message,
+      });
+
+      const { userName, userEmail } = await getClerkUserContact(userId);
+
       const ticket = await createEscalation({
-        conversationId,
-        contact,
+        conversationId: convId,
+        contact: userId,
+        userName,
+        userEmail,
         summary: message,
         channel: "web",
       });
+
+      const answer = `Your request has been sent to staff. Reference: ${ticket.id.slice(0, 8).toUpperCase()}`;
+
+      await addMessage({
+        conversationId: convId,
+        role: "assistant",
+        content: answer,
+      });
+
       await notifyEscalation(ticket);
       return NextResponse.json({
-        answer: `Your request has been sent to staff. Reference: ${ticket.id.slice(0, 8)}`,
+        answer,
         escalated: true,
         ticketId: ticket.id,
+        conversationId: convId,
       });
     }
 
@@ -86,11 +105,9 @@ export async function POST(req: NextRequest) {
     let convId = conversationId;
 
     if (isDbConfigured()) {
-      const guestId = userId ? null : await getGuestSessionId();
       const conv = await getOrCreateConversation({
         conversationId: convId,
         userId,
-        guestSessionId: guestId,
         channel: "web",
       });
       convId = conv.id;

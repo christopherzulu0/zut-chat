@@ -3605,6 +3605,8 @@ export namespace Prisma {
     userName: string | null
     userEmail: string | null
     summary: string | null
+    adminNotes: string | null
+    resolutionMessage: string | null
     status: $Enums.EscalationStatus | null
     channel: $Enums.Channel | null
     createdAt: Date | null
@@ -3617,6 +3619,8 @@ export namespace Prisma {
     userName: string | null
     userEmail: string | null
     summary: string | null
+    adminNotes: string | null
+    resolutionMessage: string | null
     status: $Enums.EscalationStatus | null
     channel: $Enums.Channel | null
     createdAt: Date | null
@@ -3629,6 +3633,8 @@ export namespace Prisma {
     userName: number
     userEmail: number
     summary: number
+    adminNotes: number
+    resolutionMessage: number
     status: number
     channel: number
     createdAt: number
@@ -3643,6 +3649,8 @@ export namespace Prisma {
     userName?: true
     userEmail?: true
     summary?: true
+    adminNotes?: true
+    resolutionMessage?: true
     status?: true
     channel?: true
     createdAt?: true
@@ -3655,6 +3663,8 @@ export namespace Prisma {
     userName?: true
     userEmail?: true
     summary?: true
+    adminNotes?: true
+    resolutionMessage?: true
     status?: true
     channel?: true
     createdAt?: true
@@ -3667,6 +3677,8 @@ export namespace Prisma {
     userName?: true
     userEmail?: true
     summary?: true
+    adminNotes?: true
+    resolutionMessage?: true
     status?: true
     channel?: true
     createdAt?: true
@@ -3752,6 +3764,8 @@ export namespace Prisma {
     userName: string | null
     userEmail: string | null
     summary: string
+    adminNotes: string | null
+    resolutionMessage: string | null
     status: $Enums.EscalationStatus
     channel: $Enums.Channel
     createdAt: Date
@@ -3781,6 +3795,8 @@ export namespace Prisma {
     userName?: boolean
     userEmail?: boolean
     summary?: boolean
+    adminNotes?: boolean
+    resolutionMessage?: boolean
     status?: boolean
     channel?: boolean
     createdAt?: boolean
@@ -3794,6 +3810,8 @@ export namespace Prisma {
     userName?: boolean
     userEmail?: boolean
     summary?: boolean
+    adminNotes?: boolean
+    resolutionMessage?: boolean
     status?: boolean
     channel?: boolean
     createdAt?: boolean
@@ -3807,6 +3825,8 @@ export namespace Prisma {
     userName?: boolean
     userEmail?: boolean
     summary?: boolean
+    adminNotes?: boolean
+    resolutionMessage?: boolean
     status?: boolean
     channel?: boolean
     createdAt?: boolean
@@ -3820,12 +3840,14 @@ export namespace Prisma {
     userName?: boolean
     userEmail?: boolean
     summary?: boolean
+    adminNotes?: boolean
+    resolutionMessage?: boolean
     status?: boolean
     channel?: boolean
     createdAt?: boolean
   }
 
-  export type EscalationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "conversationId" | "contact" | "userName" | "userEmail" | "summary" | "status" | "channel" | "createdAt", ExtArgs["result"]["escalation"]>
+  export type EscalationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "conversationId" | "contact" | "userName" | "userEmail" | "summary" | "adminNotes" | "resolutionMessage" | "status" | "channel" | "createdAt", ExtArgs["result"]["escalation"]>
   export type EscalationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     conversation?: boolean | Escalation$conversationArgs<ExtArgs>
   }
@@ -3848,6 +3870,8 @@ export namespace Prisma {
       userName: string | null
       userEmail: string | null
       summary: string
+      adminNotes: string | null
+      resolutionMessage: string | null
       status: $Enums.EscalationStatus
       channel: $Enums.Channel
       createdAt: Date
@@ -4281,6 +4305,8 @@ export namespace Prisma {
     readonly userName: FieldRef<"Escalation", 'String'>
     readonly userEmail: FieldRef<"Escalation", 'String'>
     readonly summary: FieldRef<"Escalation", 'String'>
+    readonly adminNotes: FieldRef<"Escalation", 'String'>
+    readonly resolutionMessage: FieldRef<"Escalation", 'String'>
     readonly status: FieldRef<"Escalation", 'EscalationStatus'>
     readonly channel: FieldRef<"Escalation", 'Channel'>
     readonly createdAt: FieldRef<"Escalation", 'DateTime'>
@@ -6898,6 +6924,8 @@ export namespace Prisma {
     userName: 'userName',
     userEmail: 'userEmail',
     summary: 'summary',
+    adminNotes: 'adminNotes',
+    resolutionMessage: 'resolutionMessage',
     status: 'status',
     channel: 'channel',
     createdAt: 'createdAt'
@@ -7257,6 +7285,8 @@ export namespace Prisma {
     userName?: StringNullableFilter<"Escalation"> | string | null
     userEmail?: StringNullableFilter<"Escalation"> | string | null
     summary?: StringFilter<"Escalation"> | string
+    adminNotes?: StringNullableFilter<"Escalation"> | string | null
+    resolutionMessage?: StringNullableFilter<"Escalation"> | string | null
     status?: EnumEscalationStatusFilter<"Escalation"> | $Enums.EscalationStatus
     channel?: EnumChannelFilter<"Escalation"> | $Enums.Channel
     createdAt?: DateTimeFilter<"Escalation"> | Date | string
@@ -7270,6 +7300,8 @@ export namespace Prisma {
     userName?: SortOrderInput | SortOrder
     userEmail?: SortOrderInput | SortOrder
     summary?: SortOrder
+    adminNotes?: SortOrderInput | SortOrder
+    resolutionMessage?: SortOrderInput | SortOrder
     status?: SortOrder
     channel?: SortOrder
     createdAt?: SortOrder
@@ -7286,6 +7318,8 @@ export namespace Prisma {
     userName?: StringNullableFilter<"Escalation"> | string | null
     userEmail?: StringNullableFilter<"Escalation"> | string | null
     summary?: StringFilter<"Escalation"> | string
+    adminNotes?: StringNullableFilter<"Escalation"> | string | null
+    resolutionMessage?: StringNullableFilter<"Escalation"> | string | null
     status?: EnumEscalationStatusFilter<"Escalation"> | $Enums.EscalationStatus
     channel?: EnumChannelFilter<"Escalation"> | $Enums.Channel
     createdAt?: DateTimeFilter<"Escalation"> | Date | string
@@ -7299,6 +7333,8 @@ export namespace Prisma {
     userName?: SortOrderInput | SortOrder
     userEmail?: SortOrderInput | SortOrder
     summary?: SortOrder
+    adminNotes?: SortOrderInput | SortOrder
+    resolutionMessage?: SortOrderInput | SortOrder
     status?: SortOrder
     channel?: SortOrder
     createdAt?: SortOrder
@@ -7317,6 +7353,8 @@ export namespace Prisma {
     userName?: StringNullableWithAggregatesFilter<"Escalation"> | string | null
     userEmail?: StringNullableWithAggregatesFilter<"Escalation"> | string | null
     summary?: StringWithAggregatesFilter<"Escalation"> | string
+    adminNotes?: StringNullableWithAggregatesFilter<"Escalation"> | string | null
+    resolutionMessage?: StringNullableWithAggregatesFilter<"Escalation"> | string | null
     status?: EnumEscalationStatusWithAggregatesFilter<"Escalation"> | $Enums.EscalationStatus
     channel?: EnumChannelWithAggregatesFilter<"Escalation"> | $Enums.Channel
     createdAt?: DateTimeWithAggregatesFilter<"Escalation"> | Date | string
@@ -7610,6 +7648,8 @@ export namespace Prisma {
     userName?: string | null
     userEmail?: string | null
     summary: string
+    adminNotes?: string | null
+    resolutionMessage?: string | null
     status?: $Enums.EscalationStatus
     channel?: $Enums.Channel
     createdAt?: Date | string
@@ -7623,6 +7663,8 @@ export namespace Prisma {
     userName?: string | null
     userEmail?: string | null
     summary: string
+    adminNotes?: string | null
+    resolutionMessage?: string | null
     status?: $Enums.EscalationStatus
     channel?: $Enums.Channel
     createdAt?: Date | string
@@ -7634,6 +7676,8 @@ export namespace Prisma {
     userName?: NullableStringFieldUpdateOperationsInput | string | null
     userEmail?: NullableStringFieldUpdateOperationsInput | string | null
     summary?: StringFieldUpdateOperationsInput | string
+    adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEscalationStatusFieldUpdateOperationsInput | $Enums.EscalationStatus
     channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7647,6 +7691,8 @@ export namespace Prisma {
     userName?: NullableStringFieldUpdateOperationsInput | string | null
     userEmail?: NullableStringFieldUpdateOperationsInput | string | null
     summary?: StringFieldUpdateOperationsInput | string
+    adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEscalationStatusFieldUpdateOperationsInput | $Enums.EscalationStatus
     channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7659,6 +7705,8 @@ export namespace Prisma {
     userName?: string | null
     userEmail?: string | null
     summary: string
+    adminNotes?: string | null
+    resolutionMessage?: string | null
     status?: $Enums.EscalationStatus
     channel?: $Enums.Channel
     createdAt?: Date | string
@@ -7670,6 +7718,8 @@ export namespace Prisma {
     userName?: NullableStringFieldUpdateOperationsInput | string | null
     userEmail?: NullableStringFieldUpdateOperationsInput | string | null
     summary?: StringFieldUpdateOperationsInput | string
+    adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEscalationStatusFieldUpdateOperationsInput | $Enums.EscalationStatus
     channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7682,6 +7732,8 @@ export namespace Prisma {
     userName?: NullableStringFieldUpdateOperationsInput | string | null
     userEmail?: NullableStringFieldUpdateOperationsInput | string | null
     summary?: StringFieldUpdateOperationsInput | string
+    adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEscalationStatusFieldUpdateOperationsInput | $Enums.EscalationStatus
     channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8187,6 +8239,8 @@ export namespace Prisma {
     userName?: SortOrder
     userEmail?: SortOrder
     summary?: SortOrder
+    adminNotes?: SortOrder
+    resolutionMessage?: SortOrder
     status?: SortOrder
     channel?: SortOrder
     createdAt?: SortOrder
@@ -8199,6 +8253,8 @@ export namespace Prisma {
     userName?: SortOrder
     userEmail?: SortOrder
     summary?: SortOrder
+    adminNotes?: SortOrder
+    resolutionMessage?: SortOrder
     status?: SortOrder
     channel?: SortOrder
     createdAt?: SortOrder
@@ -8211,6 +8267,8 @@ export namespace Prisma {
     userName?: SortOrder
     userEmail?: SortOrder
     summary?: SortOrder
+    adminNotes?: SortOrder
+    resolutionMessage?: SortOrder
     status?: SortOrder
     channel?: SortOrder
     createdAt?: SortOrder
@@ -8917,6 +8975,8 @@ export namespace Prisma {
     userName?: string | null
     userEmail?: string | null
     summary: string
+    adminNotes?: string | null
+    resolutionMessage?: string | null
     status?: $Enums.EscalationStatus
     channel?: $Enums.Channel
     createdAt?: Date | string
@@ -8928,6 +8988,8 @@ export namespace Prisma {
     userName?: string | null
     userEmail?: string | null
     summary: string
+    adminNotes?: string | null
+    resolutionMessage?: string | null
     status?: $Enums.EscalationStatus
     channel?: $Enums.Channel
     createdAt?: Date | string
@@ -8999,6 +9061,8 @@ export namespace Prisma {
     userName?: StringNullableFilter<"Escalation"> | string | null
     userEmail?: StringNullableFilter<"Escalation"> | string | null
     summary?: StringFilter<"Escalation"> | string
+    adminNotes?: StringNullableFilter<"Escalation"> | string | null
+    resolutionMessage?: StringNullableFilter<"Escalation"> | string | null
     status?: EnumEscalationStatusFilter<"Escalation"> | $Enums.EscalationStatus
     channel?: EnumChannelFilter<"Escalation"> | $Enums.Channel
     createdAt?: DateTimeFilter<"Escalation"> | Date | string
@@ -9140,6 +9204,8 @@ export namespace Prisma {
     userName?: string | null
     userEmail?: string | null
     summary: string
+    adminNotes?: string | null
+    resolutionMessage?: string | null
     status?: $Enums.EscalationStatus
     channel?: $Enums.Channel
     createdAt?: Date | string
@@ -9181,6 +9247,8 @@ export namespace Prisma {
     userName?: NullableStringFieldUpdateOperationsInput | string | null
     userEmail?: NullableStringFieldUpdateOperationsInput | string | null
     summary?: StringFieldUpdateOperationsInput | string
+    adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEscalationStatusFieldUpdateOperationsInput | $Enums.EscalationStatus
     channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9192,6 +9260,8 @@ export namespace Prisma {
     userName?: NullableStringFieldUpdateOperationsInput | string | null
     userEmail?: NullableStringFieldUpdateOperationsInput | string | null
     summary?: StringFieldUpdateOperationsInput | string
+    adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEscalationStatusFieldUpdateOperationsInput | $Enums.EscalationStatus
     channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9203,6 +9273,8 @@ export namespace Prisma {
     userName?: NullableStringFieldUpdateOperationsInput | string | null
     userEmail?: NullableStringFieldUpdateOperationsInput | string | null
     summary?: StringFieldUpdateOperationsInput | string
+    adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEscalationStatusFieldUpdateOperationsInput | $Enums.EscalationStatus
     channel?: EnumChannelFieldUpdateOperationsInput | $Enums.Channel
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

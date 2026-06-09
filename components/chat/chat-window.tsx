@@ -11,6 +11,13 @@ type ChatMessage = {
   sources?: SourceCitation[];
 };
 
+const WELCOME: ChatMessage = {
+  id: "welcome",
+  role: "assistant",
+  content:
+    "Hello! I am the ZUT Student Support assistant. Ask about admissions, fees, ID cards, registration, deadlines, or campus services.",
+};
+
 const STARTER_PROMPTS = [
   "How much is DIT tuition?",
   "When do applications close?",
@@ -18,18 +25,22 @@ const STARTER_PROMPTS = [
   "Registration deadlines this semester?",
 ];
 
-export function ChatWindow() {
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: "welcome",
-      role: "assistant",
-      content:
-        "Hello! I am the ZUT Student Support assistant. Ask about admissions, fees, ID cards, registration, deadlines, or campus services.",
-    },
-  ]);
+type ChatWindowProps = {
+  initialConversationId?: string;
+  onConversationChange?: (id: string | undefined) => void;
+};
+
+export function ChatWindow({
+  initialConversationId,
+  onConversationChange,
+}: ChatWindowProps) {
+  const [messages, setMessages] = useState<ChatMessage[]>([WELCOME]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [conversationId, setConversationId] = useState<string | undefined>();
+  const [loadingHistory, setLoadingHistory] = useState(false);
+  const [conversationId, setConversationId] = useState<string | undefined>(
+    initialConversationId
+  );
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const showStarters =
@@ -39,8 +50,53 @@ export function ChatWindow() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
 
+  useEffect(() => {
+    if (!initialConversationId) {
+      setMessages([WELCOME]);
+      setConversationId(undefined);
+      return;
+    }
+
+    let cancelled = false;
+    setLoadingHistory(true);
+
+    fetch(`/api/chat/conversations/${initialConversationId}`)
+      .then(async (res) => {
+        if (!res.ok) throw new Error("Failed to load conversation");
+        return res.json();
+      })
+      .then((data) => {
+        if (cancelled) return;
+        const loaded: ChatMessage[] = data.conversation.messages.map(
+          (m: {
+            id: string;
+            role: string;
+            content: string;
+            sources?: SourceCitation[];
+          }) => ({
+            id: m.id,
+            role: m.role as "user" | "assistant",
+            content: m.content,
+            sources: m.sources as SourceCitation[] | undefined,
+          })
+        );
+        setMessages(loaded.length > 0 ? loaded : [WELCOME]);
+        setConversationId(initialConversationId);
+      })
+      .catch(() => {
+        if (!cancelled) setMessages([WELCOME]);
+      })
+      .finally(() => {
+        if (!cancelled) setLoadingHistory(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialConversationId]);
+
   async function sendMessage(text: string, escalate = false) {
-    if (!text.trim() || loading) return;
+    if (!text.trim() || loading || loadingHistory) return;
     setMessages((m) => [
       ...m,
       { id: crypto.randomUUID(), role: "user", content: text.trim() },
@@ -63,7 +119,10 @@ export function ChatWindow() {
         throw new Error("Your session expired. Please sign in again.");
       }
       if (!res.ok) throw new Error(data.error ?? "Request failed");
-      if (data.conversationId) setConversationId(data.conversationId);
+      if (data.conversationId) {
+        setConversationId(data.conversationId);
+        onConversationChange?.(data.conversationId);
+      }
       setMessages((m) => [
         ...m,
         {
@@ -98,15 +157,19 @@ export function ChatWindow() {
         <div className="min-w-0 flex-1">
           <p className="font-semibold text-zinc-900">ZUT Support Assistant</p>
           <p className="text-xs font-medium text-emerald-600">
-            Online · Official documents
+            {loadingHistory ? "Loading conversation..." : "Online · Official documents"}
           </p>
         </div>
       </div>
 
       <div className="flex-1 space-y-4 overflow-y-auto bg-zinc-50/80 p-4 sm:p-5">
-        {messages.map((msg) => (
-          <MessageBubble key={msg.id} message={msg} />
-        ))}
+        {loadingHistory ? (
+          <div className="flex items-center justify-center py-12">
+            <div className="h-8 w-8 animate-spin rounded-full border-2 border-emerald-200 border-t-emerald-700" />
+          </div>
+        ) : (
+          messages.map((msg) => <MessageBubble key={msg.id} message={msg} />)
+        )}
         {loading && <TypingIndicator />}
         <div ref={bottomRef} />
       </div>
@@ -139,11 +202,11 @@ export function ChatWindow() {
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask about fees, admissions, ID..."
             className="flex-1 rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-500/20"
-            disabled={loading}
+            disabled={loading || loadingHistory}
           />
           <button
             type="submit"
-            disabled={loading || !input.trim()}
+            disabled={loading || loadingHistory || !input.trim()}
             className="rounded-xl bg-emerald-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-emerald-700/20 transition hover:bg-emerald-800 disabled:opacity-50"
           >
             Send
@@ -154,7 +217,7 @@ export function ChatWindow() {
           onClick={() =>
             sendMessage("I need to speak with a staff member", true)
           }
-          disabled={loading}
+          disabled={loading || loadingHistory}
           className="mt-3 w-full rounded-xl border border-zinc-200 bg-zinc-50 py-2.5 text-sm font-medium text-zinc-600 transition hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 disabled:opacity-50"
         >
           Contact staff

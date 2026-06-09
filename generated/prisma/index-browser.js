@@ -148,6 +148,8 @@ exports.Prisma.EscalationScalarFieldEnum = {
   userName: 'userName',
   userEmail: 'userEmail',
   summary: 'summary',
+  adminNotes: 'adminNotes',
+  resolutionMessage: 'resolutionMessage',
   status: 'status',
   channel: 'channel',
   createdAt: 'createdAt'

@@ -152,6 +152,78 @@ export async function updateEscalationStatus(
   });
 }
 
+export async function updateEscalation(
+  id: string,
+  data: {
+    status?: "open" | "in_progress" | "resolved";
+    adminNotes?: string | null;
+    resolutionMessage?: string | null;
+  }
+) {
+  return prisma.escalation.update({
+    where: { id },
+    data: {
+      ...(data.status !== undefined && { status: data.status }),
+      ...(data.adminNotes !== undefined && { adminNotes: data.adminNotes }),
+      ...(data.resolutionMessage !== undefined && {
+        resolutionMessage: data.resolutionMessage,
+      }),
+    },
+  });
+}
+
+export async function listUserConversations(
+  userId: string,
+  options: { limit?: number; offset?: number } = {}
+) {
+  const limit = options.limit ?? 5;
+  const offset = options.offset ?? 0;
+  const where = { userId, channel: "web" as const };
+
+  const [conversations, total] = await Promise.all([
+    prisma.conversation.findMany({
+      where,
+      orderBy: { updatedAt: "desc" },
+      take: limit,
+      skip: offset,
+      include: {
+        messages: {
+          orderBy: { createdAt: "desc" },
+          take: 1,
+          select: { content: true, createdAt: true },
+        },
+        _count: { select: { messages: true } },
+      },
+    }),
+    prisma.conversation.count({ where }),
+  ]);
+
+  const items = conversations.map((c) => ({
+    id: c.id,
+    updatedAt: c.updatedAt,
+    messageCount: c._count.messages,
+    preview: c.messages[0]?.content.slice(0, 100) ?? "New conversation",
+  }));
+
+  return {
+    conversations: items,
+    hasMore: offset + items.length < total,
+    total,
+  };
+}
+
+export async function getUserConversation(
+  conversationId: string,
+  userId: string
+) {
+  return prisma.conversation.findFirst({
+    where: { id: conversationId, userId },
+    include: {
+      messages: { orderBy: { createdAt: "asc" } },
+    },
+  });
+}
+
 export async function listDocuments() {
   return prisma.document.findMany({
     orderBy: { createdAt: "desc" },

@@ -16,6 +16,8 @@ type Escalation = {
   userName: string | null;
   userEmail: string | null;
   summary: string;
+  adminNotes: string | null;
+  resolutionMessage: string | null;
   status: string;
   channel: string;
   conversationId: string | null;
@@ -25,6 +27,12 @@ type Escalation = {
     userId: string | null;
     messages: Message[];
   } | null;
+};
+
+type UpdatePayload = {
+  status?: "open" | "in_progress" | "resolved";
+  adminNotes?: string | null;
+  resolutionMessage?: string | null;
 };
 
 type EscalationCounts = {
@@ -78,23 +86,46 @@ function relativeTime(iso: string) {
 
 function EscalationCard({
   escalation,
-  onStatusChange,
+  onUpdate,
   updating,
 }: {
   escalation: Escalation;
-  onStatusChange: (id: string, status: "open" | "in_progress" | "resolved") => void;
+  onUpdate: (id: string, payload: UpdatePayload) => void;
   updating: string | null;
 }) {
   const [expanded, setExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [resolving, setResolving] = useState(false);
+  const [resolutionMessage, setResolutionMessage] = useState("");
+  const [adminNotes, setAdminNotes] = useState(escalation.adminNotes ?? "");
+  const [notesDirty, setNotesDirty] = useState(false);
   const ref = escalation.id.slice(0, 8).toUpperCase();
   const messages = escalation.conversation?.messages ?? [];
   const actions = STATUS_ACTIONS[escalation.status] ?? [];
+  const isUpdating = updating === escalation.id;
 
   async function copyRef() {
     await navigator.clipboard.writeText(escalation.id);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  }
+
+  function handleAction(next: "open" | "in_progress" | "resolved") {
+    if (next === "resolved") {
+      setResolving(true);
+      return;
+    }
+    onUpdate(escalation.id, { status: next });
+  }
+
+  function confirmResolve() {
+    onUpdate(escalation.id, {
+      status: "resolved",
+      resolutionMessage: resolutionMessage.trim() || null,
+      adminNotes: notesDirty ? adminNotes : undefined,
+    });
+    setResolving(false);
+    setResolutionMessage("");
   }
 
   return (
@@ -160,14 +191,14 @@ function EscalationCard({
           </div>
         </div>
 
-        {actions.length > 0 && (
+        {actions.length > 0 && !resolving && (
           <div className="mt-3 flex flex-wrap gap-2 border-t border-zinc-100 pt-3">
             {actions.map((action) => (
               <button
                 key={action.next}
                 type="button"
-                disabled={updating === escalation.id}
-                onClick={() => onStatusChange(escalation.id, action.next)}
+                disabled={isUpdating}
+                onClick={() => handleAction(action.next)}
                 className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition disabled:opacity-50 ${
                   action.next === "resolved"
                     ? "bg-emerald-700 text-white hover:bg-emerald-800"
@@ -176,11 +207,81 @@ function EscalationCard({
                       : "border border-zinc-300 bg-white text-zinc-700 hover:bg-zinc-50"
                 }`}
               >
-                {updating === escalation.id ? "Updating..." : action.label}
+                {isUpdating ? "Updating..." : action.label}
               </button>
             ))}
           </div>
         )}
+
+        {resolving && (
+          <div className="mt-3 space-y-3 border-t border-zinc-100 pt-3">
+            <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
+              Message to student (optional)
+            </p>
+            <textarea
+              value={resolutionMessage}
+              onChange={(e) => setResolutionMessage(e.target.value)}
+              placeholder="Explain how the issue was resolved. Sent to the student's email if available."
+              rows={3}
+              className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm text-zinc-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+            />
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                disabled={isUpdating}
+                onClick={confirmResolve}
+                className="rounded-lg bg-emerald-700 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-800 disabled:opacity-50"
+              >
+                {isUpdating ? "Sending..." : "Confirm resolve & notify"}
+              </button>
+              <button
+                type="button"
+                disabled={isUpdating}
+                onClick={() => {
+                  setResolving(false);
+                  setResolutionMessage("");
+                }}
+                className="rounded-lg border border-zinc-300 px-3 py-1.5 text-xs font-medium text-zinc-600 hover:bg-zinc-50"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
+
+        <div className="mt-3 border-t border-zinc-100 pt-3">
+          <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
+            Admin notes (internal)
+          </p>
+          <textarea
+            value={adminNotes}
+            onChange={(e) => {
+              setAdminNotes(e.target.value);
+              setNotesDirty(true);
+            }}
+            placeholder="Private notes — not sent to the student"
+            rows={2}
+            className="mt-2 w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm text-zinc-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+          />
+          {notesDirty && (
+            <button
+              type="button"
+              disabled={isUpdating}
+              onClick={() => {
+                onUpdate(escalation.id, { adminNotes });
+                setNotesDirty(false);
+              }}
+              className="mt-2 rounded-lg border border-zinc-300 px-3 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-50 disabled:opacity-50"
+            >
+              Save notes
+            </button>
+          )}
+          {escalation.resolutionMessage && escalation.status === "resolved" && (
+            <p className="mt-2 text-xs text-zinc-500">
+              Sent to student: {escalation.resolutionMessage}
+            </p>
+          )}
+        </div>
       </div>
 
       {expanded && messages.length > 0 && (
@@ -244,16 +345,13 @@ export function EscalationsPanel() {
     load();
   }, [load]);
 
-  async function handleStatusChange(
-    id: string,
-    status: "open" | "in_progress" | "resolved"
-  ) {
+  async function handleUpdate(id: string, payload: UpdatePayload) {
     setUpdating(id);
     try {
       const res = await fetch(`/api/admin/escalations/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status }),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Update failed");
@@ -341,7 +439,7 @@ export function EscalationsPanel() {
             <EscalationCard
               key={e.id}
               escalation={e}
-              onStatusChange={handleStatusChange}
+              onUpdate={handleUpdate}
               updating={updating}
             />
           ))}

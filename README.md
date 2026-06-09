@@ -8,7 +8,8 @@ AI-powered student support for **Zambia University of Technology (ZUT)** using R
 - **Web chat** — natural language Q&A grounded in official university documents (OpenAI + Pinecone)
 - **Clerk auth** — students must sign in before using chat
 - **Admin dashboard** — upload PDFs, seed knowledge base, view metrics and escalations
-- **Human escalation** — “Contact staff” creates tickets and optional email alerts
+- **Human escalation** — “Contact staff” creates tickets; Gmail SMTP alerts admins and emails students on resolve
+- **Chat history** — sidebar on `/chat` to resume past conversations (requires PostgreSQL)
 
 ## Tech stack
 
@@ -94,6 +95,22 @@ Copy the ID from Clerk Dashboard → Users, or from your profile in the app head
 
 After either option, admins see **Admin** in the header and an **Admin dashboard** button on `/chat`.
 
+### Escalation email (Gmail SMTP)
+
+For demo/FYP volume, use a personal Gmail account with an [App Password](https://myaccount.google.com/apppasswords) (requires 2-Step Verification):
+
+```env
+GMAIL_USER=your.name@gmail.com
+GMAIL_APP_PASSWORD=your16charapppassword
+ESCALATION_EMAIL=your.name@gmail.com
+GMAIL_FROM_NAME=ZUT Student Support
+```
+
+- **New ticket** → email sent to `ESCALATION_EMAIL` (your inbox)
+- **Resolve ticket** → optional message emailed to the student’s Clerk email
+
+If Gmail vars are missing, notifications fall back to server console logs (`[Escalation]`).
+
 ## Development
 
 ```bash
@@ -124,9 +141,12 @@ If routes 404 after adding API files, run `pnpm dev:clean`.
 | Route | Auth | Description |
 |-------|------|-------------|
 | `POST /api/chat` | Signed-in user | Chat / escalate |
+| `GET /api/chat/conversations` | Signed-in user | List past chats |
+| `GET /api/chat/conversations/[id]` | Signed-in user | Load chat messages |
 | `POST /api/admin/documents` | Admin | Upload PDF |
 | `GET /api/admin/metrics` | Admin | Query metrics |
 | `GET /api/admin/escalations` | Admin | Escalation list |
+| `PATCH /api/admin/escalations/[id]` | Admin | Update status, notes, resolution |
 | `POST /api/seed` | Admin | Seed knowledge base |
 
 ## License

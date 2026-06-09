@@ -63,10 +63,12 @@ model Escalation {
   contact        String
   userName       String?          @map("user_name")
   userEmail      String?          @map("user_email")
-  summary        String
-  status         EscalationStatus @default(open)
-  channel        Channel          @default(web)
-  createdAt      DateTime         @default(now()) @map("created_at")
+  summary           String
+  adminNotes        String?          @map("admin_notes")
+  resolutionMessage String?          @map("resolution_message")
+  status            EscalationStatus @default(open)
+  channel           Channel          @default(web)
+  createdAt         DateTime         @default(now()) @map("created_at")
   conversation   Conversation?    @relation(fields: [conversationId], references: [id], onDelete: SetNull)
 
   @@map("escalations")

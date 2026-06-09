@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { ChatWindow } from "@/components/chat/chat-window";
+import { ChatLayout } from "@/components/chat/chat-layout";
 import { AdminAccessDeniedBanner } from "@/components/auth/admin-access-denied-banner";
 import { AdminDashboardLink } from "@/components/admin/admin-dashboard-link";
 import { LandingGrid, LandingOrb } from "@/components/landing/landing-decor";
@@ -14,7 +14,7 @@ export default async function ChatPage() {
       <LandingOrb className="-left-24 top-8 h-72 w-72 bg-emerald-300/20" />
       <LandingOrb className="-right-24 bottom-24 h-64 w-64 bg-teal-300/15" />
 
-      <div className="relative mx-auto flex w-full max-w-4xl flex-1 flex-col px-4 py-5 sm:py-8">
+      <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-5 sm:py-8">
         <div className="mb-5 shrink-0">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
@@ -37,7 +37,7 @@ export default async function ChatPage() {
         </Suspense>
 
         <div className="mt-4 flex min-h-0 flex-1 flex-col pb-4">
-          <ChatWindow />
+          <ChatLayout />
         </div>
       </div>
     </div>
